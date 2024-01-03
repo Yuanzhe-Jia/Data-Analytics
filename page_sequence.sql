@@ -1,23 +1,23 @@
 with
 dataset as (
 select
-	clientId,
+	sessionId,
     eventTimeMs,
     eventName,
-    leadInFrame(eventTimeMs, 1) over (partition by clientId order by eventTimeMs rows between unbounded preceding and unbounded following) as timeBehind,
-    leadInFrame(eventName, 1) over (partition by clientId order by eventTimeMs rows between unbounded preceding and unbounded following) as eventBehind
+    leadInFrame(eventTimeMs, 1) over (partition by sessionId order by eventTimeMs rows between unbounded preceding and unbounded following) as timeBehind,
+    leadInFrame(eventName, 1) over (partition by sessionId order by eventTimeMs rows between unbounded preceding and unbounded following) as eventBehind
 from 
  	`default`.app_events_dist
 where
  	customerId = 1960183601
  	and platform = 'web'
-	and date(eventTimeMs) between '2023-12-27' and '2023-12-31'	
+	and date(eventTimeMs) between '2023-12-28' and '2023-12-31'	
 	and eventName like '%conviva_%'
 ),
 
 dataset_1 as (
 select 
-	clientId, eventTimeMs, eventName, timeBehind,
+	sessionId, eventTimeMs, eventName, timeBehind,
 	if(eventBehind = '', 'null', eventBehind) as eventBehind,
 	dateDiff('second', eventTimeMs, timeBehind) as timeDiff
 from dataset
