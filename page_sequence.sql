@@ -1,7 +1,7 @@
 with
 dataset as (
 select
-	sessionId,
+    sessionId,
     eventTimeMs,
     eventName,
     leadInFrame(eventTimeMs, 1) over (partition by sessionId order by eventTimeMs rows between unbounded preceding and unbounded following) as timeBehind,
