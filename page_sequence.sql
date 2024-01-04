@@ -9,10 +9,14 @@ select
 from 
  	`default`.app_events_dist
 where
- 	customerId = 1960183601
+ 	customerId = 1960183749 --nlz
+ 	--customerId = 1960183601 --zee
+ 	--customerId = 1960180407 --rtve
+ 	--customerId = 1960180521 --dryrun
  	and platform = 'web'
 	and date(eventTimeMs) between '2023-12-28' and '2023-12-31'	
 	and eventName like '%conviva_%'
+	and eventName <> 'conviva_application_error'
 ),
 
 dataset_1 as (
@@ -49,6 +53,6 @@ where timeDiff >= 0
 group by 1
 )
 
-select * from dataset_2 order by 2 desc
+--select * from dataset_2 order by 2 desc
 
---select * from dataset_3 order by 1
+select * from dataset_3 order by 1
