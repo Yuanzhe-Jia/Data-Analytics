@@ -29,7 +29,7 @@ The goal of Data Analytics is to turn raw data into actionable insights. By unde
 - A/B test.
 
 #### Product Analysis
-- Funnel anslysis, AARRR(Acquisition, Activation, Retention, Referral, Revenue).
+- Funnel/Churn anslysis, AARRR(Acquisition, Activation, Retention, Referral, Revenue).
 - Channel analysis.
 - User journey analysis.
 - Functionality analysis.
