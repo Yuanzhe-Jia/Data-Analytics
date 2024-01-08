@@ -73,7 +73,7 @@ data_8 as (--devices in the follow-up period with login activities
   select
     clientId as clid
   from intigral
-  where title is not null and title <> "" and title = "stctv_app.NewLoginVC" and date(eventTimeMs) <> "2023-12-28"
+  where title is not null and title <> "" and title = "stctv_app.NewLoginVC" and date(eventTimeMs) > "2023-12-28"
   group by 1
 ),
 
