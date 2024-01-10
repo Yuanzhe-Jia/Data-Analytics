@@ -46,3 +46,4 @@ The goal of Data Analytics is to turn raw data into actionable insights. By unde
 - P&L forecast/Break-even analysis.
 - Balance sheet/Profit and loss statement/Cash flow statement.
 - User life time value.
+
