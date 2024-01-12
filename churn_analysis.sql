@@ -1,16 +1,16 @@
 with 
 users_with_login as (
 select 
-clientId, 
-count(case when eventName = 'Login Screen View' then 1 else null end) as login_attempts,
-count(case when eventName = 'Login Success' then 1 else null end) as login_success
---clientId, sessionId, eventTimeMs, eventName
+  clientId, 
+  count(case when eventName = 'Login Screen View' then 1 else null end) as login_attempts,
+  count(case when eventName = 'Login Success' then 1 else null end) as login_success
+  --clientId, sessionId, eventTimeMs, eventName
 from `default`.app_events_dist 
 where 
-toDate(eventTimeMs) = '2023-11-27' 
-and customerId = 1960183749
---and eventName like '%Login%'
-and eventName in ('Login Screen View', 'Login Success')
+  toDate(eventTimeMs) = '2023-11-27' 
+  and customerId = 1960183749
+  --and eventName like '%Login%'
+  and eventName in ('Login Screen View', 'Login Success')
 group by 1
 ),
 
