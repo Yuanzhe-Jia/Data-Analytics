@@ -18,7 +18,9 @@ login_users_no_success as (
 select 
   *
 from users_with_login
-where login_attempts >= 1 and login_success = 0
+where 
+  login_attempts >= 1 
+  and login_success = 0
 ),
 
 later_login_users as (
@@ -29,7 +31,8 @@ from `default`.app_events_dist
 where 
   toDate(eventTimeMs) between '2023-11-28' and '2023-12-04' 
   and customerId = 1960183749
-group by 1 having login_attempts >= 1
+group by 1 
+having login_attempts >= 1
 ),
 
 join_table as (
