@@ -35,11 +35,11 @@ where
 
 select 
 	case when a.customerId = 1960183749 then 'nlz'
-		 when a.customerId = 1960183601 then 'zee'
-		 when a.customerId = 1960180407 then 'rtve'
-		 when a.customerId = 1960181213 then 'bt'
-		 when a.customerId = 1960185375 then 'fancode'
-		 else 'dryrun' end as customer,
+  	     when a.customerId = 1960183601 then 'zee'
+             when a.customerId = 1960180407 then 'rtve'
+	     when a.customerId = 1960181213 then 'bt'
+	     when a.customerId = 1960185375 then 'fancode'
+	     else 'dryrun' end as customer,
 	a.1min_sessionlet, 
 	b.30min_sessionlet, 
 	round(a.1min_sessionlet/b.30min_sessionlet, 3) as pct
