@@ -53,6 +53,4 @@ where timeDiff >= 0
 group by 1
 )
 
---select * from dataset_2 order by 2 desc
-
 select * from dataset_3 order by 1
