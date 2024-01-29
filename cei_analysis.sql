@@ -12,10 +12,11 @@ select
 	case when 
         	inSession = 1 and (
           	1 = 0
-            	or (platform = 'mob' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 1)
-            	or (platform = 'web' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 5) 
-            	or (platform = 'mob' and intvAppStartupCount > 0 and intvAppStartupDurationMs > 1000 * 1)
             	or (platform = 'mob' and intvAppCrashCount >= 1) 
+            	or (platform = 'web' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 5) 
+            	or (platform = 'mob' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 1)
+		or (platform = 'mob' and intvAppStartupCount > 0 and intvAppStartupDurationMs > 1000 * 1)
+            	
         )
 	then
 		concat(clientId, toString(toStartOfMinute(intvStartTimeMs)))
@@ -28,10 +29,10 @@ select
       	case when
         	inSession = 1 and (
           	1 = 0
-            	or (platform = 'mob' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 1)
-            	or (platform = 'web' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 5) 
-            	or (platform = 'mob' and intvAppStartupCount > 0 and intvAppStartupDurationMs > 1000 * 1)
             	or (platform = 'mob' and intvAppCrashCount >= 1) 
+            	or (platform = 'web' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 5) 
+            	or (platform = 'mob' and intvIsJustPageSwitched = 1 and intvPageLoadDurationMs > 1000 * 1)
+		or (platform = 'mob' and intvAppStartupCount > 0 and intvAppStartupDurationMs > 1000 * 1)
         )
       	then
         	concat(clientId, toString(toStartOfMinute(intvStartTimeMs)))
