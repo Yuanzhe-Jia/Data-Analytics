@@ -1,10 +1,10 @@
 with
 data_1 as (
-select
+    select
 	customerId
-from 
+    from 
 	`default`.app_sessionlet_pt1m_dist
-where
+    where
 	customerId in (1960183749, 1960183601, 1960180407, 1960181213, 1960185375, 1960180521)
  	--customerId = 1960183749 --nlz
  	--customerId = 1960183601 --zee
@@ -17,11 +17,11 @@ where
 ),
 
 data_2 as (
-select
+    select
 	customerId
-from 
+    from 
 	`default`.app_sessionlet_pt30m_dist
-where
+    where
 	customerId in (1960183749, 1960183601, 1960180407, 1960181213, 1960185375, 1960180521) 	
 	--customerId = 1960183749 --nlz
  	--customerId = 1960183601 --zee
@@ -44,8 +44,9 @@ select
 	b.30min_sessionlet, 
 	round(a.1min_sessionlet/b.30min_sessionlet, 3) as pct
 from 
-(select customerId, count(1) as 1min_sessionlet from data_1 group by 1) a
+	(select customerId, count(1) as 1min_sessionlet from data_1 group by 1) a
 join
-(select customerId, count(1) as 30min_sessionlet from data_2 group by 1) b
-on a.customerId = b.customerId
+	(select customerId, count(1) as 30min_sessionlet from data_2 group by 1) b
+on 
+	a.customerId = b.customerId
 order by pct desc
