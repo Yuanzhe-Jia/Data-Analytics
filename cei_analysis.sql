@@ -1,10 +1,10 @@
 select
 	fromUnixTimestamp(
-        intDiv(
-          	toUnixTimestamp(intvStartTimeMs) - toUnixTimestamp('2024-01-20 00:00:00'),
-          	3600 * 24
-		) * 3600 * 24 + toUnixTimestamp('2024-01-20 00:00:00')
-	) AS cei_timestamp,
+        		intDiv(
+          			toUnixTimestamp(intvStartTimeMs) - toUnixTimestamp('2024-01-20 00:00:00'),
+          			3600 * 24
+				) * 3600 * 24 + toUnixTimestamp('2024-01-20 00:00:00')
+			) AS cei_timestamp,
 	
 	(least(100, greatest(0, ((IF(sum(intvUserActiveTimeMs/1000/60) > 0,
 	100.0 - ((IF(
