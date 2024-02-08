@@ -1,7 +1,6 @@
 select
 	fromUnixTimestamp(
-        		  intDiv(toUnixTimestamp(intvStartTimeMs) - toUnixTimestamp('2024-01-20 00:00:00'), 3600 * 24) * 3600 * 24 
-			  + toUnixTimestamp('2024-01-20 00:00:00')
+        		  intDiv(toUnixTimestamp(intvStartTimeMs) - toUnixTimestamp('2024-01-20 00:00:00'), 3600 * 24) * 3600 * 24 + toUnixTimestamp('2024-01-20 00:00:00')
 		  	 ) AS cei_timestamp,
 	
 	(least(100, greatest(0, 
