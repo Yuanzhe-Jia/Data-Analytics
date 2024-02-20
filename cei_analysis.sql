@@ -44,5 +44,6 @@ from
 	app_sessionlet_pt1m_dist
 where 
 	customerId = 1960183749 
-	and ((intvStartTimeMs >= '2024-01-20 00:00:00' and intvStartTimeMs < '2024-01-24 00:00:00'))	
+	and intvStartTimeMs >= '2024-01-20 00:00:00' 
+	and intvStartTimeMs < '2024-01-24 00:00:00'	
 group by 1 with totals
