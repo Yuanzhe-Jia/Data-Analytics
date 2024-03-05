@@ -9,7 +9,7 @@ select
 from app_events_dist
 where 
 	customerId = 1960180521 --dryrun
-	and url = 'https://pulse.conviva.com/app/experience-insights/dashboard/prompt'
+	and url = 'https://pulse.conviva.com/app/experience-insights/dashboard/prompt' --Prompt AI
 ),
 
 dataset_1 as 
