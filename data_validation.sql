@@ -1,7 +1,7 @@
 with 
 a as (
   select 
-  	*,
+    *,
     TIMESTAMP_MILLIS(EventTimeMs) as derived_tstamp,
     TIMESTAMP_MILLIS(cast(navigationStart as bigint)) as navigation_start,
     TIMESTAMP_MILLIS(cast(loadEventEnd as bigint)) as load_event_end,
