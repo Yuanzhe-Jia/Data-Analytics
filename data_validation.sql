@@ -14,10 +14,8 @@ a as (
 dedup_a as (
   select 
     *
-  from
-    a
-  where
-    rn = 1
+  from a
+  where rn = 1
 ),
  
 page_change_mute_pv as (  
@@ -105,7 +103,6 @@ page_load_time as (
   from page_load_complete
   group by 1,2
   ),
-  
 
 dryrun_sessionlets as (
   select
@@ -122,7 +119,7 @@ dryrun_sessionlets as (
     substr(sensorVersion,1,3) = 'js-'
     and inSession = true
   ),
-  
+
 --metrics
 ds_metrics as (
   select "page_loads" as metrics, "Web" as platform, count(distinct concat(session_id, page_id)) as ds_result from events_with_page_id --page loads
@@ -136,7 +133,6 @@ ds_metrics as (
   union all 
   select "avg_page_load_time" as metrics, "Web" as platform, avg(load_time) as ds_result from page_load_time where load_time between 0 and 90 --avg page load time
   ),
-
 
 tlb_metrics as (
   select "page_loads" as metrics, "Web" as platform, sum(is_page_load) as tlb_result from dryrun_sessionlets --page loads
