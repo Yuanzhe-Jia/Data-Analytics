@@ -120,7 +120,6 @@ dryrun_sessionlets as (
     and inSession = true
   ),
 
---metrics
 ds_metrics as (
   select "page_loads" as metrics, "Web" as platform, count(distinct concat(session_id, page_id)) as ds_result from events_with_page_id --page loads
   union all 
