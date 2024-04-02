@@ -1,5 +1,5 @@
 with 
-a as (
+dataset as (
   select 
     *,
     TIMESTAMP_MILLIS(EventTimeMs) as derived_tstamp,
@@ -7,14 +7,14 @@ a as (
     TIMESTAMP_MILLIS(cast(loadEventEnd as bigint)) as load_event_end,
     concat(page_urlhost, page_urlpath) as page_url2,
     row_number() over(partition by event_id order by EventTimeMs desc) as rn
- FROM ds
+ FROM event_table
  where in_session=1 and substr(v_tracker,1,3) = 'js-' 
 ),  
 
-dedup_a as (
+dedup_dataset as (
   select 
     *
-  from a
+  from dataset
   where rn = 1
 ),
  
@@ -22,7 +22,7 @@ page_change_mute_pv as (
   select 
     *,
     if(page_url2 <> lag(page_url2) over(partition by session_id order by derived_tstamp), 1, 0) as is_page_change
-  from dedup_a 
+  from dedup_dataset 
   where event_name <> "page_view"
 
   union all
@@ -30,7 +30,7 @@ page_change_mute_pv as (
   select 
     *,
     0 as is_page_change
-  from dedup_a
+  from dedup_dataset
   where event_name = "page_view"
   ),
 
@@ -114,7 +114,7 @@ dryrun_sessionlets as (
     intvPageDurationMs / 1000 / 60 as page_duration,
     intvPageLoadSuccessCount as is_load_complete,
     intvPageLoadDurationMs / 1000 as load_duration
-  from tlb_1min
+  from tlb_1min_table
   where 
     substr(sensorVersion,1,3) = 'js-'
     and inSession = true
