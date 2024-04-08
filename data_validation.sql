@@ -146,4 +146,13 @@ tlb_metrics as (
   select "avg_page_load_time" as metrics, "Web" as platform, sum(load_duration) / sum(is_load_complete) as tlb_result from dryrun_sessionlets --avg page load time
   )
 
-select a.metrics, a.platform os_platform, a.ds_result, b.tlb_result, round(if(a.metrics in ("page_load_complete_rate"), a.ds_result - b.tlb_result, (a.ds_result - b.tlb_result) / a.ds_result), 3) as gap from ds_metrics a join tlb_metrics b on a.metrics = b.metrics order by case when a.metrics = "page_loads" then 1 when a.metrics = "total_minutes" then 2 when a.metrics = "avg_minutes_per_page" then 3 when a.metrics = "page_load_complete" then 4 when a.metrics = "page_load_complete_rate" then 5 else 6 end
+select 
+  a.metrics, 
+  a.platform os_platform, 
+  a.ds_result, 
+  b.tlb_result, 
+  round(if(a.metrics in ("page_load_complete_rate"), a.ds_result - b.tlb_result, (a.ds_result - b.tlb_result) / a.ds_result), 3) as gap 
+from ds_metrics a 
+join tlb_metrics b 
+on a.metrics = b.metrics 
+order by case when a.metrics = "page_loads" then 1 when a.metrics = "total_minutes" then 2 when a.metrics = "avg_minutes_per_page" then 3 when a.metrics = "page_load_complete" then 4 when a.metrics = "page_load_complete_rate" then 5 else 6 end
