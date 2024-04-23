@@ -155,4 +155,10 @@ select
 from ds_metrics a 
 join tlb_metrics b 
 on a.metrics = b.metrics 
-order by case when a.metrics = "page_loads" then 1 when a.metrics = "total_minutes" then 2 when a.metrics = "avg_minutes_per_page" then 3 when a.metrics = "page_load_complete" then 4 when a.metrics = "page_load_complete_rate" then 5 else 6 end
+order by case 
+  when a.metrics = "page_loads" then 1 
+  when a.metrics = "total_minutes" then 2 
+  when a.metrics = "avg_minutes_per_page" then 3 
+  when a.metrics = "page_load_complete" then 4 
+  when a.metrics = "page_load_complete_rate" then 5 
+  else 6 end
