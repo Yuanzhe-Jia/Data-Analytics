@@ -1,5 +1,6 @@
 # Databricks notebook source
-# DBTITLE 1,step 1: get event data from GCP
+
+# step 1: get event data from GCP
 # import libraries
 
 from pyspark.sql import functions as fn
@@ -14,38 +15,20 @@ import pandas as pd
 import json
 
 # convert btypes to string
-
 from pyspark.sql import SparkSession
 spark.conf.set("spark.sql.parquet.binaryAsString", "true")
 
 # pull raw data from gcp
-
 dt_data = spark.read.parquet("gs://app-insights-prod-data-validation/clickhouse-exporter/1960186939_small.parquet")
 dt_data.createOrReplaceTempView("dt_data")
 
-
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC
-# MAGIC with
-# MAGIC dataset as (
-# MAGIC   select
-# MAGIC     *
-# MAGIC   from dt_data
-# MAGIC   where eventName <> 'conviva_periodic_heartbeat'
-# MAGIC )
-# MAGIC --select * from dataset limit 3
-# MAGIC select eventName, count(1) from dataset group by 1 order by 2 desc
-
 # COMMAND ----------
 
 
 
 # COMMAND ----------
 
-# DBTITLE 1,step 2: extract sequence data in a row
+# step 2: extract sequence data in a row
 # transfer columns to rows
 
 # function for 2 event flow
@@ -97,7 +80,6 @@ def get_nodes(columns, data):
       nodes.append(dic)
   return nodes
 
-
 def get_links(data):
   links = []
 
@@ -115,7 +97,7 @@ def get_links(data):
 
 # COMMAND ----------
 
-# DBTITLE 1,step 3-1: data pre-processing by SQL
+#step 3-1: data pre-processing by SQL
 # set a target event
 # define a filter
 # define event/mapped event flow
@@ -187,11 +169,8 @@ select * from dateset_5 order by clid, derived_tstamp
 after_boot = after_boot.toPandas()
 after_boot.head(10)
 
-# COMMAND ----------
 
-
-
-# DBTITLE 1,step 4-1: make sankey chart
+# step 4-1: make sankey chart
 # transform the raw data into sequences
 
 df = pd.DataFrame(get_sequence_3(after_boot), columns=["col2", "col3", "col4"])
@@ -268,7 +247,7 @@ get_sequence_3(after_boot)
 
 # COMMAND ----------
 
-# DBTITLE 1,step 3-2: data pre-processing by SQL
+# step 3-2: data pre-processing by SQL
 # set a target event
 # define a filter
 # define event/mapped event flow
@@ -337,11 +316,8 @@ select * from dateset_5 order by clid, derived_tstamp
 after_playback_initiated = after_playback_initiated.toPandas()
 after_playback_initiated.head(10)
 
-# COMMAND ----------
 
-
-
-# DBTITLE 1,step 4-2: make sankey chart
+# step 4-2: make sankey chart
 # transform the raw data into sequences
 
 df = pd.DataFrame(get_sequence_3(after_playback_initiated), columns=["col2", "col3", "col4"])
@@ -416,7 +392,7 @@ displayHTML(sankey)
 
 # COMMAND ----------
 
-# DBTITLE 1,step 3-3: data pre-processing by SQL
+# step 3-3: data pre-processing by SQL
 # set a target event
 # define a filter
 # define event/mapped event flow
@@ -485,11 +461,8 @@ select * from dateset_5 order by clid, derived_tstamp
 before_error = before_error.toPandas()
 before_error.head(10)
 
-# COMMAND ----------
 
-
-
-# DBTITLE 1,step 4-3: make sankey chart
+# step 4-3: make sankey chart
 # transform the raw data into sequences
 
 df = pd.DataFrame(get_sequence_3(before_error), columns=["col1", "col2", "col3"])
@@ -564,7 +537,7 @@ displayHTML(sankey)
 
 # COMMAND ----------
 
-# DBTITLE 1,step 3-4: data pre-processing by SQL
+# step 3-4: data pre-processing by SQL
 # set a target event
 # define a filter
 # define event/mapped event flow
@@ -633,11 +606,8 @@ select * from dateset_5 order by clid, derived_tstamp
 after_buffer_initiated = after_buffer_initiated.toPandas()
 after_buffer_initiated.head(10)
 
-# COMMAND ----------
 
-
-
-# DBTITLE 1,step 4-4: make sankey chart
+# step 4-4: make sankey chart
 # transform the raw data into sequences
 
 df = pd.DataFrame(get_sequence_3(after_buffer_initiated), columns=["col2", "col3", "col4"])
@@ -712,7 +682,7 @@ displayHTML(sankey)
 
 # COMMAND ----------
 
-# DBTITLE 1,step 3-5: data pre-processing by SQL
+# step 3-5: data pre-processing by SQL
 # set a target event
 # define a filter
 # define event/mapped event flow
@@ -781,11 +751,8 @@ select * from dateset_5 order by clid, derived_tstamp
 before_playback_fail = before_playback_fail.toPandas()
 before_playback_fail.head(10)
 
-# COMMAND ----------
 
-
-
-# DBTITLE 1,step 4-5: make sankey chart
+# step 4-5: make sankey chart
 # transform the raw data into sequences
 
 df = pd.DataFrame(get_sequence_3(before_playback_fail), columns=["col1", "col2", "col3"])
@@ -853,64 +820,3 @@ pic = (
 pic.render("sankey.html")
 sankey = open('/databricks/driver/sankey.html', 'r').read()
 displayHTML(sankey)
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC
-# MAGIC with
-# MAGIC dataset as (
-# MAGIC   select
-# MAGIC     clientId as clid,
-# MAGIC     eventName as event_name,
-# MAGIC     eventTimeMs as derived_tstamp
-# MAGIC   from dt_data
-# MAGIC   where 
-# MAGIC     eventName <> 'conviva_periodic_heartbeat'
-# MAGIC     and eventName in ('Content Buffer Initiated', 'Error', 'Content Playback Failed')
-# MAGIC ),
-# MAGIC
-# MAGIC dateset_1 as (
-# MAGIC   select 
-# MAGIC     *,
-# MAGIC     lag(event_name) over (partition by clid order by derived_tstamp) as former_event,
-# MAGIC   
-# MAGIC     lead(event_name) over (partition by clid order by derived_tstamp) as later_event,
-# MAGIC     lead(derived_tstamp) over (partition by clid order by derived_tstamp) as later_tstamp
-# MAGIC   from dataset
-# MAGIC ),
-# MAGIC
-# MAGIC dateset_2 as (--remove continuous events
-# MAGIC   select 
-# MAGIC     *
-# MAGIC   from dateset_1
-# MAGIC   where 
-# MAGIC     event_name <> former_event
-# MAGIC ),
-# MAGIC
-# MAGIC dateset_3 as (
-# MAGIC   select
-# MAGIC     * except (former_event)
-# MAGIC   from dateset_2
-# MAGIC   where 
-# MAGIC     event_name = 'Content Buffer Initiated'
-# MAGIC     and later_event in ('Error', 'Content Playback Failed')
-# MAGIC ),
-# MAGIC
-# MAGIC dataset_4 as (
-# MAGIC select 
-# MAGIC *, 
-# MAGIC TIMESTAMPDIFF(MILLISECOND, derived_tstamp, later_tstamp)/1000 as time_diff
-# MAGIC from dateset_3 order by clid, derived_tstamp
-# MAGIC )
-# MAGIC
-# MAGIC select 
-# MAGIC avg(case when later_event = 'Error' then time_diff else null end) as avg_time_buffer_to_error,
-# MAGIC avg(case when later_event = 'Content Playback Failed' then time_diff else null end) as avg_time_buffer_to_fail
-# MAGIC from dataset_4
-
-# COMMAND ----------
