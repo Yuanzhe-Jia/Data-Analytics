@@ -228,8 +228,3 @@ pic = (
 pic.render("sankey.html")
 sankey = open('/databricks/driver/sankey.html', 'r').read()
 displayHTML(sankey)
-
-get_sequence_3(after_boot)
-pic.render("sankey.html")
-sankey = open('/databricks/driver/sankey.html', 'r').read()
-displayHTML(sankey)
