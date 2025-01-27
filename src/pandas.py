@@ -9,18 +9,18 @@ client = get_client(host='localhost', port='8123', username='default', password=
 # define sql query
 sql = """
 select
-    clientId,
-    eventTimeMs,
-    eventName,
+    client_id,
+    event_time,
+    event_name,
     platform,
-    deviceName,
-    appName,
-    sensorVersion,
-    networkRequestDurationMs as duration
+    device_name,
+    app_name,
+    sensor_version,
+    duration
 from 
-    app_events_dist
+    event_table
 where
-    eventTimeMs between '2024-08-25 00:00:00' and '2024-08-25 12:00:00'
+    event_time between '2024-08-25 00:00:00' and '2024-08-25 12:00:00'
 limit 1000
 """
 
@@ -33,27 +33,27 @@ df_result.isnull().sum() # check missing values
 
 # step 2: data manipulation
 # extract some of columns
-df_result[['clientId', 'eventName', 'platform']].head()
+df_result[['client_id', 'event_name', 'platform']].head()
 
 # locate data
-df_result.loc[2:4, ['appName', 'sensorVersion']]
+df_result.loc[2:4, ['app_name', 'sensor_version']]
 
 # extraxct subsets by filters
 # df_result[df_result.duration >= 100].head()
 # df_result[(df_result.duration >= 100) & (df_result.duration <= 200)].head()
-# df_result[(df_result.sensorVersion >= 'js-0.6.5') | (df_result.sensorVersion == 'js-0.6.6')].head()
-df_result[df_result.sensorVersion.isin(['js-0.6.5', 'js-0.6.6'])].head()
+# df_result[(df_result.sensor_version >= 'js-0.6.5') | (df_result.sensor_version == 'js-0.6.6')].head()
+df_result[df_result.sensor_version.isin(['js-0.6.5', 'js-0.6.6'])].head()
 
 # apply mapping functions
-# df_result.eventTimeMs.map(lambda x: str(x)[:7]).head()
+# df_result.event_time.map(lambda x: str(x)[:7]).head()
 df_result.duration.map(lambda x: 1 if x >= 100 else 0).head()
 
 # add a new column
-df_result['dateTime'] = df_result.eventTimeMs.map(lambda x: str(x)[:7])
-df_result[['clientId', 'eventTimeMs', 'dateTime']].head()
+df_result['date_time'] = df_result.event_time.map(lambda x: str(x)[:7])
+df_result[['client_id', 'event_time', 'date_time']].head()
 
 # delete columns
-df_result.drop('appName', axis=1, inplace=True)
+df_result.drop('app_name', axis=1, inplace=True)
 
 # delete rows
 df_result.drop(0, axis=0, inplace=True)
@@ -71,7 +71,7 @@ df_result.platform.value_counts(normalize=True)
 df_result.sort_values("duration", ascending=False).head()
 
 # manipulate string
-df_result.dateTime.str.replace('-', '/').head()
+df_result.date_time.str.replace('-', '/').head()
 
 # random sampling
 # df_result.sample(n=10, random_state=42).head()
@@ -79,11 +79,11 @@ df_result.sample(frac=0.1, random_state=42).head()
 
 # discretise data
 df_result['type'] = pd.cut(df_result.duration, bins=[-10, 1, 10, 10000], labels=['small', 'medium', 'large'])
-df_result.sample(5)[['clientId', 'duration', 'type']].head()
+df_result.sample(5)[['client_id', 'duration', 'type']].head()
 
 # create cross table
 pd.crosstab(df_result.platform, df_result.type)
 
 # plot data
 %matplotlib inline
-df_result.set_index('eventTimeMs').plot(kind='line', figsize=(16, 6)) # line, bar, hist, pie...
+df_result.set_index('event_time').plot(kind='line', figsize=(16, 6)) # line, bar, hist, pie...
