@@ -19,7 +19,7 @@ from pyspark.sql import SparkSession
 spark.conf.set("spark.sql.parquet.binaryAsString", "true")
 
 # pull raw data from gcp
-dt_data = spark.read.parquet("gs://app-insights-prod-data-validation/clickhouse-exporter/1960186939_small.parquet")
+dt_data = spark.read.parquet("gs://...parquet")
 dt_data.createOrReplaceTempView("dt_data")
 
 # COMMAND ----------
