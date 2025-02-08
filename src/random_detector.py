@@ -1,4 +1,4 @@
-# 2
+# 1
 # entropy based random detector
 
 import math
